@@ -1,0 +1,6 @@
+@UrlGenerator_HostAddress = http://localhost:5012
+
+GET {{UrlGenerator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
