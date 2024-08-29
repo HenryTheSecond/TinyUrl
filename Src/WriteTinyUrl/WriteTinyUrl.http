@@ -1,0 +1,6 @@
+@WriteTinyUrl_HostAddress = http://localhost:5095
+
+GET {{WriteTinyUrl_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
