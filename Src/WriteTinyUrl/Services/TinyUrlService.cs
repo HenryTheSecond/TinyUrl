@@ -1,8 +1,10 @@
-﻿using WriteTinyUrl.Interfaces.Repositories;
+﻿using Shared.Attributes;
+using WriteTinyUrl.Interfaces.Repositories;
 using WriteTinyUrl.Interfaces.Services;
 
 namespace WriteTinyUrl.Services
 {
+    [Export(LifeCycle = LifeCycle.SCOPE)]
     public class TinyUrlService(IUrlRangeRepository urlRangeRepository) : ITinyUrlService
     {
         public async Task<string> CreateTinyUrlAsync(string originalUrl)
@@ -13,7 +15,7 @@ namespace WriteTinyUrl.Services
             tinyUrl.IsUsed = true;
             await urlRangeRepository.SaveChangeAsync();
 
-            return "aaa";
+            return tinyUrl.Url;
         }
     }
 }

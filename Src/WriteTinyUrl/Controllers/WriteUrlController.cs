@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using WriteTinyUrl.Interfaces.Services;
 using WriteTinyUrl.Models;
 
 namespace WriteTinyUrl.Controllers
 {
     [ApiController]
-    public class WriteUrlController(UrlRangeContext context) : ControllerBase
+    public class WriteUrlController(ITinyUrlService tinyUrlService) : ControllerBase
     {
         [HttpPost("createTinyUrl")]
-        public async Task<string> CreateTinyUrl()
+        public async Task<string> CreateTinyUrl(WriteUrlRequest request)
         {
-            
-            return "aaaa";
+            return await tinyUrlService.CreateTinyUrlAsync(request.OriginalUrl);
         }
     }
 }
