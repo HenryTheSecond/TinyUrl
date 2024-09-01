@@ -11,7 +11,9 @@ namespace WriteTinyUrl.Repositories
     {
         public async Task<UrlRange?> GetTinyUrlAsync()
         {
-            return await Query.FirstOrDefaultAsync(x => x.IsUsed == false);
+            return await context.Set<UrlRange>()
+                .FromSqlRaw($"SELECT * FROM {UrlRange.TableName} WITH (XLOCK, READPAST) WHERE {nameof(UrlRange.IsUsed)} = 0")
+                .FirstOrDefaultAsync();
         }
     }
 }

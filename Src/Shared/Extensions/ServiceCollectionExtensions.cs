@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Shared.Attributes;
+using Shared.EntityFrameworkHelper;
+using Shared.Interfaces;
 using System.Reflection;
 
 namespace Shared.Extensions
@@ -33,6 +36,16 @@ namespace Shared.Extensions
                     registerMethodByLifeCycle[lifeCycle].Invoke(null, [services, iinterface, exportedService]);
                 }    
             }
+            return services;
+        }
+
+        public static IServiceCollection AddTransactionContext<TDbContext>(this IServiceCollection services) where TDbContext : DbContext
+        {
+            services.AddScoped<ITransactionContext>(serviceProvider =>
+            {
+                var dbContext = serviceProvider.GetService<TDbContext>();
+                return new EntityFrameworkTransactionContext(dbContext);
+            });
             return services;
         }
     }
