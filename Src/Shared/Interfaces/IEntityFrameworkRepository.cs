@@ -2,7 +2,7 @@
 
 namespace Shared.Interfaces
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IEntityFrameworkRepository<TEntity> where TEntity : class
     {
         IQueryable<TEntity> Query { get; }
         Task<TEntity?> FindByIdAsync(object[] id);

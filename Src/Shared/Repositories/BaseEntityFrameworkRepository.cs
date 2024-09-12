@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Shared.Repositories
 {
-    public class BaseRepository<TEntity>(DbContext context) : IRepository<TEntity> where TEntity : class
+    public class BaseEntityFrameworkRepository<TEntity>(DbContext context) : IEntityFrameworkRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext context = context;
         private readonly IQueryable<TEntity> _query = context.Set<TEntity>();
