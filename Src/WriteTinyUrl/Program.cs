@@ -1,6 +1,7 @@
 using WriteTinyUrl;
 using Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<UrlRangeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("UrlRangeContext")!));
 builder.Services.AddTransactionContext<UrlRangeContext>();
+
+builder.Services.AddSingleton(services => new MongoClient(builder.Configuration.GetConnectionString("TinyUrl")));
 
 builder.Services.AddExportedServices();
 
