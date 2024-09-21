@@ -8,7 +8,7 @@ namespace ReadTinyUrl.Controllers
     {
         [HttpGet("{tinyUrl}")]
         public async Task<string> ReadTinyUrlAsync(string tinyUrl)
-        { 
+        {
             return await tinyUrlService.ReadUrlAsync(tinyUrl);
         }
     }
