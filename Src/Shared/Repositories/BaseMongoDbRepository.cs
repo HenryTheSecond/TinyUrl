@@ -31,7 +31,7 @@ namespace Shared.Repositories
             return await collection.Find(session, predicate).ToListAsync();
         }
 
-        public async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> predicate, IClientSessionHandle? session = null)
+        public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> predicate, IClientSessionHandle? session = null)
         {
             if (session == null)
             {

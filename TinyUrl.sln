@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WriteTinyUrl", "Src\WriteTi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WriteTinyUrlParallel", "Src\WriteTinyUrlParallel\WriteTinyUrlParallel.csproj", "{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadTinyUrl", "Src\ReadTinyUrl\ReadTinyUrl.csproj", "{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadTinyUrl", "Src\ReadTinyUrl\ReadTinyUrl.csproj", "{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyUrlJobs", "Src\TinyUrlJobs\TinyUrlJobs.csproj", "{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

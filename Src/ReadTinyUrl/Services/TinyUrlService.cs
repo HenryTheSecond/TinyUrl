@@ -17,11 +17,22 @@ namespace ReadTinyUrl.Services
                 return cachedUrl.ToString();
             }
 
-            var originalUrl = (await tinyUrlRepository.FindOneAsync(x => x.ShortUrl == tinyUrl)).OriginalUrl;
+            // TODO: handle exception
+            var urlObj = await tinyUrlRepository.FindOneAsync(x => x.ShortUrl == tinyUrl && x.Expire <= DateTimeOffset.Now) ?? throw new Exception("Not found URL");
+            var originalUrl = urlObj.OriginalUrl;
+
             await redisDatabase.HashSetAsync(RedisConstants.TinyUrlKey, [new HashEntry(tinyUrl, originalUrl)], CommandFlags.FireAndForget);
             await redisDatabase.HashFieldExpireAsync(RedisConstants.TinyUrlKey, [new RedisValue(tinyUrl)],
-                new TimeSpan(0, 1, 0), flags: CommandFlags.FireAndForget);
+                CalculateTimeToLive(urlObj.Expire), flags: CommandFlags.FireAndForget);
+
             return originalUrl;
+        }
+
+        private static TimeSpan CalculateTimeToLive(DateTimeOffset expire)
+        {
+            var timeToLive = new TimeSpan(0, 1, 0);
+            var remainingTime = DateTimeOffset.Now - expire;
+            return timeToLive < remainingTime ? timeToLive : remainingTime;
         }
     }
 }
