@@ -1,43 +1,45 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Quartz;
-using TinyUrlJobs.Interfaces.Repositories;
+using TinyUrlJobs.Interfaces.Repositories.MongoDb;
 
 namespace TinyUrlJobs
 {
     [DisallowConcurrentExecution]
     public class CleanExpiredUrlJob(MongoClient mongoClient, ITinyUrlRepository tinyUrlRepository) : IJob
     {
-        public const int BatchSize = 100;
+        public const int DefaultBatchSize = 100;
+        public const int MaxBatch = 50;
         public async Task Execute(IJobExecutionContext context)
         {
             var now = DateTimeOffset.Now;
-            ObjectId? idOffset = null;
 
             using var session = await mongoClient.StartSessionAsync();
 
-            while (true)
+            long countExpire = await tinyUrlRepository.CountExpireUrl(now, session);
+            var batchSize = Math.Max(DefaultBatchSize, (int)Math.Ceiling(countExpire * 1.0 / MaxBatch));
+            
+            using var cursor = await tinyUrlRepository.FindBatchAsync(x => x.Expire <= now, batchSize, session);
+            int count = 0;
+            await cursor.ForEachAsync(async url =>
             {
-                session.StartTransaction();
-
-                // We need to filter with the id offset of every batch we receive due to read and write concerns of MongoDb.
-                // We might read the old records if the write is not done yet in replicas.
-                // It could also result in better performance if we avoid using majority concern and the id in MongoDb is always indexed.
-                var expireUrls = await tinyUrlRepository.FindBatchAsync(x => x.Expire <= now && (idOffset == null || x.Id > idOffset), 
-                    BatchSize, session);
-
-                if (expireUrls.Count == 0)
+                if (count == 0)
                 {
-                    break;
+                    session.StartTransaction();
                 }
 
-                idOffset = expireUrls.Last().Id;
+                await tinyUrlRepository.DeleteAsync(url.Id, session);
+                count++;
 
-                foreach (var url in expireUrls)
+                if (count == batchSize)
                 {
-                    await tinyUrlRepository.DeleteAsync(url.Id, session);
+                    await session.CommitTransactionAsync();
+                    count = 0;
                 }
+            });
 
+            // Remove the redundant expired urls if amount of urls % batch size > 0
+            if(count > 0)
+            {
                 await session.CommitTransactionAsync();
             }
         }

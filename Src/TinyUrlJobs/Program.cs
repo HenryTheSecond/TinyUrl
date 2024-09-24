@@ -1,8 +1,9 @@
 using MongoDB.Driver;
 using Quartz;
 using TinyUrlJobs;
-using TinyUrlJobs.Interfaces.Repositories;
-using TinyUrlJobs.Repositories;
+using Shared.Extensions;
+using Microsoft.EntityFrameworkCore;
+using TinyUrlJobs.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,17 +16,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddQuartz(q =>
 {
-    q.ScheduleJob<CleanExpiredUrlJob>(triggerOptions => triggerOptions
-        .WithIdentity("CleanExpireUrl")
-        .StartNow()
-        .WithSimpleSchedule(x => x
-            .WithInterval(builder.Configuration.GetValue<TimeSpan>("CleanExpireUrlJobInterval"))
-            .RepeatForever()));
+    q.ConfigureCleanExpiredUrlJob(builder.Configuration);
+    q.ConfigureCheckAmountKeyRangeRemainingJob(builder.Configuration);
 });
+
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
 builder.Services.AddSingleton(services => new MongoClient(builder.Configuration.GetConnectionString("TinyUrl")));
-builder.Services.AddSingleton<ITinyUrlRepository, TinyUrlRepository>();
+
+builder.Services.AddDbContext<UrlRangeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("UrlRangeContext")!));
+builder.Services.AddTransactionContext<UrlRangeContext>();
+
+builder.Services.AddExportedServices();
 
 var app = builder.Build();
 

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Models.Database;
 
-namespace WriteTinyUrl
+namespace TinyUrlJobs
 {
-    public class UrlRangeContext : DbContext
+    public class UrlRangeContext: DbContext
     {
         public UrlRangeContext(DbContextOptions<UrlRangeContext> options) : base(options) { }
 
