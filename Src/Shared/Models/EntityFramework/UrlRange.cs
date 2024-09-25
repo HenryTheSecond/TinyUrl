@@ -17,7 +17,7 @@ public class UrlRange : IIdentifier
 public class UrlRangeConfiguration : IEntityTypeConfiguration<UrlRange>
 {
     private const int DefaultNumberOfUrlCharacter = 2;
-    private const string UrlAcceptedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    public const string UrlAcceptedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     public void Configure(EntityTypeBuilder<UrlRange> builder)
     {
         builder.Property(x => x.Id).HasColumnType("char(26)").HasConversion(x => x.ToString(), x => Ulid.Parse(x));
