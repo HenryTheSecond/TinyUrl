@@ -1,0 +1,26 @@
+services:
+  ReadTinyUrl:
+    image: ${DOCKER_REGISTRY-}read-tiny-url
+    container_name: ReadTinyUrl
+    build:
+      context: .
+      dockerfile: Src/ReadTinyUrl/Dockerfile
+    ports:
+      - "7001:8080"
+  Redis:
+    image: ${DOCKER_REGISTRY-}redis/redis-stack:latest
+    container_name: Redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+  MongoDb:
+    image: ${DOCKER_REGISTRY-}mongo:latest
+    container_name: MongoDb
+    ports:
+      - "27007:27017"
+    command: ["mongod", "--replSet", "myReplicaSet"]
+  # MongoDbInit:
+  #   image: ${DOCKER_REGISTRY-}mongo:latest
+  #   depends_on:
+  #     - MongoDb
+  #   entrypoint: ["sh", "/MongoScript/InitMongo.sh"]
