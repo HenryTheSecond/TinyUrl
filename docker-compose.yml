@@ -7,20 +7,34 @@ services:
       dockerfile: Src/ReadTinyUrl/Dockerfile
     ports:
       - "7001:8080"
+    environment:
+      - ConnectionStrings__TinyUrl=mongodb://MongoDb:27017/
+      - ConnectionStrings__Redis__Host=Redis
+      - ConnectionStrings__Redis__Port=6379
+    networks:
+      - internal-network
   Redis:
     image: ${DOCKER_REGISTRY-}redis/redis-stack:latest
     container_name: Redis
     ports:
       - "6379:6379"
       - "8001:8001"
+    networks:
+      - internal-network
   MongoDb:
     image: ${DOCKER_REGISTRY-}mongo:latest
     container_name: MongoDb
     ports:
       - "27007:27017"
     command: ["mongod", "--replSet", "myReplicaSet"]
+    networks:
+      - internal-network
   # MongoDbInit:
   #   image: ${DOCKER_REGISTRY-}mongo:latest
   #   depends_on:
   #     - MongoDb
   #   entrypoint: ["sh", "/MongoScript/InitMongo.sh"]
+
+networks:
+  internal-network:
+    driver: bridge
