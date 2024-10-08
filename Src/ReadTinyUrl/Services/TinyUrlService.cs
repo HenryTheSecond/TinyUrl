@@ -18,7 +18,7 @@ namespace ReadTinyUrl.Services
             }
 
             // TODO: handle exception
-            var urlObj = await tinyUrlRepository.FindOneAsync(x => x.ShortUrl == tinyUrl && x.Expire <= DateTimeOffset.Now) ?? throw new Exception("Not found URL");
+            var urlObj = await tinyUrlRepository.FindOneAsync(x => x.ShortUrl == tinyUrl && x.Expire > DateTimeOffset.Now) ?? throw new Exception("Not found URL");
             var originalUrl = urlObj.OriginalUrl;
 
             await redisDatabase.HashSetAsync(RedisConstants.TinyUrlKey, [new HashEntry(tinyUrl, originalUrl)], CommandFlags.FireAndForget);
