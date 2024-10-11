@@ -9,13 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Src\Shared\Shared
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WriteTinyUrl", "Src\WriteTinyUrl\WriteTinyUrl.csproj", "{91A15AA2-C20A-4433-95C7-25216AC4CC4C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WriteTinyUrlParallel", "Src\WriteTinyUrlParallel\WriteTinyUrlParallel.csproj", "{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadTinyUrl", "Src\ReadTinyUrl\ReadTinyUrl.csproj", "{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyUrlJobs", "Src\TinyUrlJobs\TinyUrlJobs.csproj", "{6C7AA15E-15A0-4F4D-8AF5-0889BBD728EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseProxy", "Src\ReverseProxy\ReverseProxy.csproj", "{CD3AA37C-9F06-4767-A396-6C960FC722E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReverseProxy", "Src\ReverseProxy\ReverseProxy.csproj", "{CD3AA37C-9F06-4767-A396-6C960FC722E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{91A15AA2-C20A-4433-95C7-25216AC4CC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91A15AA2-C20A-4433-95C7-25216AC4CC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91A15AA2-C20A-4433-95C7-25216AC4CC4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC66B977-F6F1-4F30-A67C-01B7B6B7EEC2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D9399AF-E56E-46D1-AD00-22DEDEAA4D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
