@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,10 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>52d7ac6e-bdd7-48e3-bb65-6c0188d438b8</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="SqlScripts\InitUrlRange.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="SqlScripts\InitUrlRange.txt" />
