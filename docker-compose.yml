@@ -13,6 +13,11 @@ services:
       - ConnectionStrings__Redis__Port=6379
     networks:
       - internal-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: '512M'
 
   WriteTinyUrl:
     image: ${DOCKER_REGISTRY-}write-tiny-url
@@ -29,6 +34,11 @@ services:
       - internal-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: '512M'
 
   ReverseProxy:
     image: ${DOCKER_REGISTRY-}reverse-proxy
@@ -44,6 +54,11 @@ services:
       - ReverseProxy__Clusters__WriteTinyUrlCluster__Destinations__WriteTinyUrlDestination__Address=http://WriteTinyUrl:8080/
     networks:
       - internal-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '128M'
     
   Redis:
     image: ${DOCKER_REGISTRY-}redis/redis-stack:latest
@@ -53,6 +68,12 @@ services:
       - "8001:8001"
     networks:
       - internal-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: '512M'
+    
 
   MongoDb:
     image: ${DOCKER_REGISTRY-}mongo:latest
@@ -62,6 +83,11 @@ services:
     command: ["mongod", "--replSet", "myReplicaSet"]
     networks:
       - internal-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: '512M'
     # TODO: Need to initiate replica
 
 networks:
