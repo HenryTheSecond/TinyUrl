@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using ReadTinyUrl.Interfaces.Repositories;
+using ReadTinyUrl.Models;
 using Shared.Attributes;
-using Shared.Models.MongoDb;
 using Shared.Repositories;
 
 namespace ReadTinyUrl.Repositories

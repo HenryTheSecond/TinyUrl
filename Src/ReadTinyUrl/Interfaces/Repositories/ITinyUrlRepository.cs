@@ -1,5 +1,5 @@
-﻿using Shared.Interfaces;
-using Shared.Models.MongoDb;
+﻿using ReadTinyUrl.Models;
+using Shared.Interfaces;
 
 namespace ReadTinyUrl.Interfaces.Repositories
 {

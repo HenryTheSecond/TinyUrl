@@ -1,8 +1,8 @@
 ﻿using MongoDB.Driver;
 using Shared.Attributes;
-using Shared.Models.MongoDb;
 using Shared.Repositories;
 using WriteTinyUrl.Interfaces.Repositories.MongoDb;
+using WriteTinyUrl.Models;
 
 namespace WriteTinyUrl.Repositories.MongoDb
 {

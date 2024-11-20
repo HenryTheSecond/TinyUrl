@@ -1,5 +1,5 @@
 ﻿using Shared.Interfaces;
-using Shared.Models.MongoDb;
+using WriteTinyUrl.Models;
 
 namespace WriteTinyUrl.Interfaces.Repositories.MongoDb
 {
