@@ -7,14 +7,21 @@ using StackExchange.Redis;
 namespace ReadTinyUrl.Services
 {
     [Export(LifeCycle = LifeCycle.SINGLETON)]
-    public class TinyUrlService(ITinyUrlRepository tinyUrlRepository, IDatabase redisDatabase) : ITinyUrlService
+    public class TinyUrlService(ITinyUrlRepository tinyUrlRepository, IDatabase redisDatabase, ILogger<TinyUrlService> logger) : ITinyUrlService
     {
         public async Task<string> ReadUrlAsync(string tinyUrl)
         {
-            var cachedUrl = await redisDatabase.HashGetAsync(RedisConstants.TinyUrlKey, tinyUrl);
-            if (!cachedUrl.IsNullOrEmpty)
+            try
             {
-                return cachedUrl.ToString();
+                var cachedUrl = await redisDatabase.HashGetAsync(RedisConstants.TinyUrlKey, tinyUrl);
+                if (!cachedUrl.IsNullOrEmpty)
+                {
+                    return cachedUrl.ToString();
+                }
+            }
+            catch(Exception e)
+            {
+                logger.LogError(e, "Get cache from Redis server {Server} cause error", redisDatabase.Multiplexer.Configuration);
             }
 
             // TODO: handle exception
