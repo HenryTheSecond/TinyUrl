@@ -1,4 +1,4 @@
-﻿using ReadTinyUrl.Models;
+﻿using ReadTinyUrl.Models.MongoModels;
 using Shared.Interfaces;
 
 namespace ReadTinyUrl.Interfaces.Repositories

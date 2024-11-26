@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using Shared.Interfaces;
-using Shared.Models.MongoDb;
 using System.Linq.Expressions;
+using TinyUrlJobs.Models;
 
 namespace TinyUrlJobs.Interfaces.Repositories.MongoDb
 {

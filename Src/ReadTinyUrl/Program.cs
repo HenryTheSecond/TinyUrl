@@ -1,7 +1,11 @@
+using Confluent.Kafka;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using ReadTinyUrl.Models;
+using ReadTinyUrl.Models.Settings;
 using Shared.Extensions;
 using StackExchange.Redis;
 
@@ -70,6 +74,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = identityServiceSettings.ClientId;
         options.RequireHttpsMetadata = false;
     });
+
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var kafkaSettings = builder.Configuration.GetSection("Kafka").Get<KafkaSettings>()!;
+    var producerConfig = new ProducerConfig
+    {
+        BootstrapServers = kafkaSettings.BootstrapServers
+    };
+
+    var schemaRegistryConfig = new SchemaRegistryConfig
+    {
+        Url = kafkaSettings.SchemaRegistryServer,
+
+    };
+
+    return new ProducerBuilder<Null, UserVisitMessage>(producerConfig)
+        .SetValueSerializer(new JsonSerializer<UserVisitMessage>(new CachedSchemaRegistryClient(schemaRegistryConfig)))
+        .Build();        
+});
 
 var app = builder.Build();
 

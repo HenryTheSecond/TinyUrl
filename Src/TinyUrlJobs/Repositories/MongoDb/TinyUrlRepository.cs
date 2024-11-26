@@ -1,9 +1,9 @@
 ﻿using MongoDB.Driver;
 using Shared.Attributes;
-using Shared.Models.MongoDb;
 using Shared.Repositories;
 using System.Linq.Expressions;
 using TinyUrlJobs.Interfaces.Repositories.MongoDb;
+using TinyUrlJobs.Models;
 
 namespace TinyUrlJobs.Repositories.MongoDb
 {

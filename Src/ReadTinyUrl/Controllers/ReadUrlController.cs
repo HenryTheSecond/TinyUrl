@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReadTinyUrl.Interfaces.Services;
 
 namespace ReadTinyUrl.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     public class ReadUrlController(ITinyUrlService tinyUrlService, IAnalyticsService analyticsService) : ControllerBase
     {
-        [HttpGet("{tinyUrl}")]
+        [HttpGet("{tinyUrl}"), AllowAnonymous]
         public async Task<string> ReadTinyUrlAsync(string tinyUrl)
         {
             string? originalUrl = null;
