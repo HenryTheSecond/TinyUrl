@@ -1,4 +1,4 @@
-﻿namespace ReadTinyUrl.Models;
+﻿namespace ReadTinyUrl.Models.Settings;
 
 public class IdentityServiceSettings
 {

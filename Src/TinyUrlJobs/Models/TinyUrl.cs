@@ -2,9 +2,8 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Shared.Interfaces;
 
-namespace ReadTinyUrl.Models;
+namespace TinyUrlJobs.Models;
 
-[BsonIgnoreExtraElements]
 public class TinyUrl : IMongoDbDocument
 {
     public ObjectId Id { get; set; }
@@ -12,4 +11,6 @@ public class TinyUrl : IMongoDbDocument
     public string OriginalUrl { get; set; } = string.Empty;
     [BsonRepresentation(BsonType.DateTime)]
     public DateTimeOffset Expire { get; set; }
+    public UserInfo? UserInfo { get; set; }
 }
+

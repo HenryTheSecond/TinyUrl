@@ -5,8 +5,7 @@ using WriteTinyUrl.Models;
 
 namespace WriteTinyUrl.Controllers
 {
-    [ApiController]
-    [AllowAnonymous]
+    [ApiController, Authorize]
     public class WriteUrlController(ITinyUrlService tinyUrlService) : ControllerBase
     {
         [HttpPost("createTinyUrl")]
