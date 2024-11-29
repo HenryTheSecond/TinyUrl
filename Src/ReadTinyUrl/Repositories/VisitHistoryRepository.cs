@@ -5,6 +5,7 @@ using ReadTinyUrl.Models.MongoModels;
 using ReadTinyUrl.Models.Responses;
 using Shared.Attributes;
 using Shared.Repositories;
+using System.Linq.Expressions;
 
 namespace ReadTinyUrl.Repositories
 {
@@ -16,20 +17,18 @@ namespace ReadTinyUrl.Repositories
         public async Task<List<VisitHistoryResponse>> GetVisitHistories(string userId, int take, 
             DateTimeOffset? lastVistedTimeParam, string? lastId)
         {
-            IFindFluent<VisitHistory, VisitHistory> query;
-            if(lastId == null)
-            {
-                query = collection.Find(FilterDefinition<VisitHistory>.Empty);
-            }
-            else
+            var filterBuilder = Builders<VisitHistory>.Filter;
+            var filter = filterBuilder.Where(x => x.UserId == userId);
+
+            if (lastId != null)
             {
                 var lastObjectId = new ObjectId(lastId);
-                query = collection
-                    .Find(x => x.UserId == userId &&
-                    (x.VisitedTime < lastVistedTimeParam || (x.VisitedTime == lastVistedTimeParam && x.Id < lastObjectId)));
+                filter = filter &
+                    filterBuilder.Where(x => x.VisitedTime < lastVistedTimeParam || (x.VisitedTime == lastVistedTimeParam && x.Id < lastObjectId));
             }
 
-            return await query.SortByDescending(x => x.VisitedTime)
+            return await collection.Find(filter)
+                .SortByDescending(x => x.VisitedTime)
                 .SortByDescending(x => x.Id)
                 .Project(x => new VisitHistoryResponse
                 {
