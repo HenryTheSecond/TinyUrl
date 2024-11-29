@@ -13,5 +13,18 @@ namespace WriteTinyUrl.Controllers
         {
             return await tinyUrlService.CreateTinyUrlAsync(new UserInfo(HttpContext.User), request.OriginalUrl);
         }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetCreateUrlHistories(DateTimeOffset? lastCreatedDateTime, string? lastId, int take = 5)
+        {
+            if ((lastCreatedDateTime != null && lastId == null) ||
+                (lastCreatedDateTime == null && lastId != null))
+            {
+                return BadRequest($"{nameof(lastCreatedDateTime)} and {nameof(lastId)} must be either both equal or not equal null");
+            }
+
+            var userInfo = new UserInfo(HttpContext.User);
+            return Ok(await tinyUrlService.GetCreateUrlHistories(userInfo.Sub, take, lastCreatedDateTime, lastId));
+        }
     }
 }
