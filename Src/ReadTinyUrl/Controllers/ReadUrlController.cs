@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadTinyUrl.Interfaces.Services;
+using System.Security.Claims;
 
 namespace ReadTinyUrl.Controllers
 {
@@ -20,6 +21,19 @@ namespace ReadTinyUrl.Controllers
             {
                 await analyticsService.SaveAnalyticInfo(HttpContext.User, tinyUrl, originalUrl);
             }
+        }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetVisitHistory(DateTimeOffset? lastVistedTimeParam, string? lastId, int take = 5)
+        {
+            if ((lastVistedTimeParam != null && lastId == null) ||
+                (lastVistedTimeParam == null && lastId != null))
+            {
+                return BadRequest($"{nameof(lastVistedTimeParam)} and {nameof(lastId)} must be either both equal or not equal null");
+            }
+
+            var userId = HttpContext.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(await tinyUrlService.GetHistory(userId, take, lastVistedTimeParam, lastId));
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿using ReadTinyUrl.Constants;
 using ReadTinyUrl.Interfaces.Repositories;
 using ReadTinyUrl.Interfaces.Services;
+using ReadTinyUrl.Models.Responses;
 using Shared.Attributes;
 using StackExchange.Redis;
 
 namespace ReadTinyUrl.Services
 {
     [Export(LifeCycle = LifeCycle.SINGLETON)]
-    public class TinyUrlService(ITinyUrlRepository tinyUrlRepository, IDatabase redisDatabase, ILogger<TinyUrlService> logger) : ITinyUrlService
+    public class TinyUrlService(ITinyUrlRepository tinyUrlRepository, IVisitHistoryRepository visitHistoryRepository,
+        IDatabase redisDatabase, ILogger<TinyUrlService> logger) : ITinyUrlService
     {
         public async Task<string> ReadUrlAsync(string tinyUrl)
         {
@@ -40,6 +42,12 @@ namespace ReadTinyUrl.Services
             var timeToLive = new TimeSpan(0, 1, 0);
             var remainingTime = DateTimeOffset.Now - expire;
             return timeToLive < remainingTime ? timeToLive : remainingTime;
+        }
+
+        public async Task<List<VisitHistoryResponse>> GetHistory(string userId, int take, 
+            DateTimeOffset? lastVistedTimeParam, string? lastId)
+        {
+            return await visitHistoryRepository.GetVisitHistories(userId, take, lastVistedTimeParam, lastId);
         }
     }
 }
