@@ -22,23 +22,25 @@ namespace Shared.Repositories
             await collection.DeleteOneAsync(session, x => x.Id == id); 
         }
 
-        public async Task<List<TDocument>> FindAsync(Expression<Func<TDocument, bool>> predicate, IClientSessionHandle? session = null)
+        public async Task<List<TDocument>> FindAsync(Expression<Func<TDocument, bool>>? predicate = null, IClientSessionHandle? session = null)
         {
-            if(session == null)
-            {
-                return await collection.Find(predicate).ToListAsync();
-            }
-            return await collection.Find(session, predicate).ToListAsync();
-        }
-
-        public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> predicate, IClientSessionHandle? session = null)
-        {
+            var filter = GetFilterDefinition(predicate);
             if (session == null)
             {
-                return await collection.Find(predicate).FirstOrDefaultAsync();
+                return await collection.Find(filter).ToListAsync();
+            }
+            return await collection.Find(session, filter).ToListAsync();
+        }
+
+        public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>>? predicate = null, IClientSessionHandle? session = null)
+        {
+            var filter = GetFilterDefinition(predicate);
+            if (session == null)
+            {
+                return await collection.Find(filter).FirstOrDefaultAsync();
             }
 
-            return await collection.Find(session, predicate).FirstOrDefaultAsync();
+            return await collection.Find(session, filter).FirstOrDefaultAsync();
         }
 
         public async Task InsertAsync(TDocument document, IClientSessionHandle? session = null)
@@ -59,6 +61,12 @@ namespace Shared.Repositories
                 return;
             }
             await collection.ReplaceOneAsync(session, x => x.Id == document.Id, document);
+        }
+
+        protected static FilterDefinition<TDocument> GetFilterDefinition(Expression<Func<TDocument, bool>>? predicate)
+        {
+            return predicate == null ? Builders<TDocument>.Filter.Empty :
+                Builders<TDocument>.Filter.Where(predicate);
         }
     }
 }

@@ -5,7 +5,6 @@ using ReadTinyUrl.Models.MongoModels;
 using ReadTinyUrl.Models.Responses;
 using Shared.Attributes;
 using Shared.Repositories;
-using System.Linq.Expressions;
 
 namespace ReadTinyUrl.Repositories
 {
