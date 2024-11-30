@@ -3,10 +3,10 @@ using Quartz;
 using Shared.Models.Database;
 using TinyUrlJobs.Interfaces.Repositories.EntityFramework;
 
-namespace TinyUrlJobs
+namespace TinyUrlJobs.Jobs
 {
     [DisallowConcurrentExecution]
-    public class CheckAmountKeyRangeRemainingJob(IUrlRangeRepository urlRangeRepository) : IJob
+    public class CheckAmountKeyRangeRemainingJob(IUrlRangeRepository urlRangeRepository, ILogger<CheckAmountKeyRangeRemainingJob> logger) : IJob
     {
         private const int Threshold = 1000;
         private const int BatchSize = 1000;
@@ -14,6 +14,8 @@ namespace TinyUrlJobs
 
         public async Task Execute(IJobExecutionContext context)
         {
+            logger.LogInformation("Start job {0} at {1}", nameof(CheckAmountKeyRangeRemainingJob), DateTimeOffset.UtcNow);
+
             long countRemaining = await urlRangeRepository.CountRemaining();
 
             if (countRemaining > Threshold)
@@ -29,18 +31,18 @@ namespace TinyUrlJobs
             await GenerateNewUrls(0);
 
             // Insert remaining urls if total % BatchSize > 0
-            if(urls.Count > 0)
+            if (urls.Count > 0)
             {
                 await InsertNewUrls(urls);
             }
 
             async Task GenerateNewUrls(int index)
             {
-                if(index == numberOfCharacter)
+                if (index == numberOfCharacter)
                 {
                     urls.Add(new string(cur));
 
-                    if(urls.Count == BatchSize)
+                    if (urls.Count == BatchSize)
                     {
                         await InsertNewUrls(urls);
                         urls.Clear();
@@ -49,14 +51,16 @@ namespace TinyUrlJobs
                 }
 
                 List<char> chars = GeneratePermutation(UrlRangeConfiguration.UrlAcceptedCharacters);
-                foreach(var ch in chars)
+                foreach (var ch in chars)
                 {
                     cur[index] = ch;
                     await GenerateNewUrls(index + 1);
                 }
             }
+
+            logger.LogInformation("End job {0} at {1}", nameof(CheckAmountKeyRangeRemainingJob), DateTimeOffset.UtcNow);
         }
-    
+
         private async Task InsertNewUrls(List<string> urls)
         {
             foreach (var url in urls)

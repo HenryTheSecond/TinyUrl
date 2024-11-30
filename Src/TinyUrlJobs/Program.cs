@@ -4,6 +4,7 @@ using TinyUrlJobs;
 using Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using TinyUrlJobs.Extensions;
+using TinyUrlJobs.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +17,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddQuartz(q =>
 {
-    q.ConfigureCleanExpiredUrlJob(builder.Configuration);
-    q.ConfigureCheckAmountKeyRangeRemainingJob(builder.Configuration);
+    var configuration = builder.Configuration;
+    q.ConfigureJob<CleanExpiredUrlJob>("CleanExpireUrl", configuration.GetValue<TimeSpan>("CleanExpireUrlJobInterval"));
+    q.ConfigureJob<CheckAmountKeyRangeRemainingJob>("CheckAmountKeyRangeRemaining", configuration.GetValue<TimeSpan>("CheckAmountKeyRangeRemainingJobInterval"));
+    q.ConfigureJob<AggregateVisitedTimeJob>("AggregateVisitedTime", configuration.GetValue<TimeSpan>("AggregateVisitedTimeJobInterval"));
 });
 
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);

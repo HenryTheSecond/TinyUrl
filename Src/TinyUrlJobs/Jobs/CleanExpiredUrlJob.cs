@@ -5,12 +5,14 @@ using TinyUrlJobs.Interfaces.Repositories.MongoDb;
 namespace TinyUrlJobs
 {
     [DisallowConcurrentExecution]
-    public class CleanExpiredUrlJob(MongoClient mongoClient, ITinyUrlRepository tinyUrlRepository) : IJob
+    public class CleanExpiredUrlJob(MongoClient mongoClient, ITinyUrlRepository tinyUrlRepository, ILogger<CleanExpiredUrlJob> logger) : IJob
     {
         public const int DefaultBatchSize = 100;
         public const int MaxBatch = 50;
         public async Task Execute(IJobExecutionContext context)
         {
+            logger.LogInformation("Start job {0} at {1}", nameof(CleanExpiredUrlJob), DateTimeOffset.UtcNow);
+
             var now = DateTimeOffset.Now;
 
             using var session = await mongoClient.StartSessionAsync();
@@ -42,6 +44,8 @@ namespace TinyUrlJobs
             {
                 await session.CommitTransactionAsync();
             }
+
+            logger.LogInformation("End job {0} at {1}", nameof(CleanExpiredUrlJob), DateTimeOffset.UtcNow);
         }
     }
 }
