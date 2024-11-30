@@ -22,8 +22,10 @@ public class VisitHistoryRepository(MongoClient mongoClient) :
             .ToList();
         return Task.FromResult(result);*/
 
-        var filter = Builders<VisitHistory>.Filter
-            .Where(x => tinyUrls.Any(url => url.TinyUrl == x.TinyUrl && url.LastVisitedTimeAggregate < x.VisitedTime));
+        var filterBuilder = Builders<VisitHistory>.Filter;
+        var filter = filterBuilder.Or(
+                tinyUrls.Select(url => filterBuilder.Eq(x => x.TinyUrl, url.TinyUrl) & filterBuilder.Gt(x => x.VisitedTime, url.LastVisitedTimeAggregate))
+            );
 
         return (await collection
             .Aggregate()
