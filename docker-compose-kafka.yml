@@ -1,0 +1,165 @@
+networks:
+  kafka-network:
+    driver: bridge
+
+services:
+  kafka1:
+    image: confluentinc/cp-kafka
+    container_name: Kafka1
+    hostname: kafka1
+    ports:
+      - "9092:9092"
+    networks:
+      - kafka-network
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      KAFKA_LISTENERS: 'INTERNAL://kafka1:29092,CONTROLLER://kafka1:39092,EXTERNAL://kafka1:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka1:29092,EXTERNAL://localhost:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:39092,2@kafka2:39093,3@kafka3:39094'
+      CLUSTER_ID: '23e674ab-8918-460b-9f35-fc638f2caf37'
+  kafka2:
+    image: confluentinc/cp-kafka
+    container_name: Kafka2
+    hostname: kafka2
+    ports:
+      - "9093:9093"
+    networks:
+      - kafka-network
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      KAFKA_LISTENERS: 'INTERNAL://kafka2:29093,CONTROLLER://kafka2:39093,EXTERNAL://kafka2:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka2:29093,EXTERNAL://localhost:9093'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:39092,2@kafka2:39093,3@kafka3:39094'
+      CLUSTER_ID: '23e674ab-8918-460b-9f35-fc638f2caf37'
+  kafka3:
+    image: confluentinc/cp-kafka
+    container_name: Kafka3
+    hostname: kafka3
+    ports:
+      - "9094:9094"
+    networks:
+      - kafka-network
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      KAFKA_LISTENERS: 'INTERNAL://kafka3:29094,CONTROLLER://kafka3:39094,EXTERNAL://kafka3:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka3:29094,EXTERNAL://localhost:9094'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:39092,2@kafka2:39093,3@kafka3:39094'
+      CLUSTER_ID: '23e674ab-8918-460b-9f35-fc638f2caf37'
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry
+    container_name: KafkaSchemaRegistry
+    hostname: schema-registry
+    ports:
+      - "29021:29021"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka1:29092,kafka2:29093,kafka3:29094'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:29021'
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    networks:
+      - kafka-network
+
+
+# version: '3'
+# networks:
+#   kafka-network:
+#     driver: bridge
+# services:
+#   kafka1:
+#     image: confluentinc/cp-kafka
+#     container_name: kafka1
+#     hostname: kafka1
+#     ports:
+#       - "9092:9092"
+#     environment:
+#       KAFKA_NODE_ID: 1
+#       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+#       KAFKA_LISTENERS: 'INTERNAL://kafka1:29092,CONTROLLER://kafka1:29093,EXTERNAL://0.0.0.0:9092'
+#       KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka1:29092,EXTERNAL://localhost:9092'
+#       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+#       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+#       KAFKA_PROCESS_ROLES: 'broker,controller'
+#       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+#       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+#       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+#       CLUSTER_ID: 'ciWo7IWazngRchmPES6q5A=='
+#     networks:
+#       - kafka-network
+
+#   kafka2:
+#     image: confluentinc/cp-kafka
+#     container_name: kafka2
+#     hostname: kafka2
+#     ports:
+#       - "9093:9093"
+#     environment:
+#       KAFKA_NODE_ID: 2
+#       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+#       KAFKA_LISTENERS: 'INTERNAL://kafka2:29092,CONTROLLER://kafka2:29093,EXTERNAL://0.0.0.0:9093'
+#       KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka2:29092,EXTERNAL://localhost:9093'
+#       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+#       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+#       KAFKA_PROCESS_ROLES: 'broker,controller'
+#       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+#       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+#       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+#       CLUSTER_ID: 'ciWo7IWazngRchmPES6q5A=='
+#     networks:
+#       - kafka-network
+
+#   kafka3:
+#     image: confluentinc/cp-kafka
+#     container_name: kafka3
+#     hostname: kafka3
+#     ports:
+#       - "9094:9094"
+#     environment:
+#       KAFKA_NODE_ID: 3
+#       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+#       KAFKA_LISTENERS: 'INTERNAL://kafka3:29092,CONTROLLER://kafka3:29093,EXTERNAL://0.0.0.0:9094'
+#       KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka3:29092,EXTERNAL://localhost:9094'
+#       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+#       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+#       KAFKA_PROCESS_ROLES: 'broker,controller'
+#       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+#       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+#       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+#       CLUSTER_ID: 'ciWo7IWazngRchmPES6q5A=='
+#     networks:
+#       - kafka-network
+
+#   schema-registry:
+#     image: confluentinc/cp-schema-registry
+#     container_name: schema-registry
+#     hostname: schema-registry
+#     ports:
+#       - "9021:9021"
+#     environment:
+#       SCHEMA_REGISTRY_HOST_NAME: schema-registry
+#       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka1:29092,kafka2:29092,kafka3:29092'
+#       SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:9021'
+#     depends_on:
+#       - kafka1
+#       - kafka2
+#       - kafka3
+#     networks:
+#       - kafka-network
